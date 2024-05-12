@@ -54,11 +54,12 @@
         class="container-fluid container-fluid-two d-flex flex-column justify-content-centre align-items-center gap-4">
     <h1>Student List</h1>
     <table>
-
         <tr>
             <th>Name</th>
-            <th>Phone Number</th>
+            <th>Student Number</th>
             <th>Email</th>
+            <th>Phone Number</th>
+            <th>Address</th>
             <th>Actions</th>
         </tr>
 
@@ -67,21 +68,21 @@
                 <td>${student.name}</td>
                 <td>${student.studentNumber}</td>
                 <td>${student.email}</td>
-            <td class="button-containerr">
-                <form action="Home" method="post">
-                    <input type="hidden" name="name" value="${student.name}">
-                    <input type="hidden" name="action" value="delete">
-                    <div class="btn-delete">
-                        <i class="fas fa-user-slash mr-3"></i>
-                        <input class="btn btn-line" type="submit" value="Delete">
+                <td>${student.phoneNumber}</td>
+                <td>${student.address}</td>
+                <td class="button-container">
+                    <form action="${pageContext.request.contextPath}/delete/${student.id}">
+                        <div class="btn-delete">
+                            <i class="fas fa-user-slash mr-3"></i>
+                            <input class="btn btn-line" type="submit" value="Delete">
+                        </div>
+                    </form>
+                    <div class="btn-update">
+                        <i class="fas fa-user-edit mr-3"></i>
+                        <button class="btn btn-line" onclick="showUpdateForm('${student.id}')">Update</button>
                     </div>
-                </form>
-                <div class="btn-update">
-                    <i class="fas fa-user-edit mr-3"></i>
-                    <button class="btn btn-line" onclick="showUpdateForm('${student.name}')">Update</button>
-                </div>
-            </td>
-        </tr>
+                </td>
+            </tr>
         </c:forEach>
     </table>
 
@@ -92,17 +93,17 @@
 
     <div class="form-container" id="addEmployeeForm" style="display: none;">
         <h2>Add Employee</h2>
-        <form action="${pageContext.request.contextPath}/students/add" method="post">
+        <form action="${pageContext.request.contextPath}/add" method="post">
             <label>Name:</label>
             <input type="text" name="name"><br>
             <label>Email:</label>
             <input type="email" name="email"><br>
             <label>Phone Number:</label>
             <input type="text" name="phoneNumber"><br>
-            <label>Department:</label>
-            <input type="text" name="department"><br>
-            <label>Position:</label>
-            <input type="text" name="position"><br>
+            <label>Student Number:</label>
+            <input type="text" name="studentNumber"><br>
+            <label>Address:</label>
+            <input type="text" name="address"><br>
             <input type="hidden" name="action" value="add">
             <input class="btn-save" type="submit" value="Save">
         </form>
@@ -110,18 +111,17 @@
 
     <div class="form-container" id="updateEmployeeForm" style="display: none;">
         <h2>Update Student</h2>
-        <form action="Home" method="post">
-            <input type="hidden" name="name" id="updateName">
+        <form id="updateForm" action="${pageContext.request.contextPath}/edit" method="post">
+            <input type="hidden" name="id" id="updateId">
+            <label>Name:</label>
+            <input type="text" name="name" id="updateName"><br>
             <label>Email:</label>
             <input type="text" name="email" id="updateEmail"><br>
             <label>Phone Number:</label>
             <input type="text" name="phoneNumber" id="updatePhoneNumber"><br>
-            <label>Department:</label>
-            <input type="text" name="department" id="updateDepartment"><br>
-            <label>Position:</label>
-            <input type="text" name="position" id="updatePosition"><br>
-            <input type="hidden" name="action" value="update">
-            <input class="btn-save" type="submit" value="Save">
+            <label>Address:</label>
+            <input type="text" name="address" id="updateAddress"><br>
+            <input type="submit" value="Save">
         </form>
     </div>
 </div>
@@ -154,8 +154,16 @@
 </footer>
 
 <script>
-    function showUpdateForm(name) {
-        document.getElementById("updateName").value = name;
+    function showUpdateForm(studentId) {
+        // Fetch the student details using the studentId
+        // Populate the update form fields with the fetched student details
+        // For example:
+        const student = getStudentDetails(studentId); // Function to fetch student details
+        document.getElementById('updateId').value = student.id;
+        document.getElementById('updateName').value = student.name;
+        document.getElementById('updateEmail').value = student.email;
+        document.getElementById('updatePhoneNumber').value = student.phoneNumber;
+        document.getElementById('updateAddress').value = student.address;
         document.getElementById("updateEmployeeForm").style.display = "block";
         document.getElementById("addEmployeeForm").style.display = "none";
         document.getElementById("btn-add").style.display = "none";
